@@ -1,4 +1,13 @@
+# Python & Environment
 .venv/
 __pycache__/
+*.pyc
 .DS_Store
 .idea/
+.vscode/
+
+# Outputs & Data (防止大文件污染Git)
+output_vis/*.png
+!output_vis/.gitkeep
+data/
+raw_videos/
