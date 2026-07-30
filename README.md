@@ -5,7 +5,6 @@ The `quality_filter.py` script evaluates image sharpness by calculating the vari
 
 ## Features
 - **Blur Assessment**: Calculates Laplacian variance to detect high-frequency edges.
-- **Lighting Inspection**: Measures mean pixel intensity to screen extreme brightness or darkness.
 - **Edge Visualization**: Saves the absolute Laplacian response maps for visual comparison.
 
 ## Quick Start
