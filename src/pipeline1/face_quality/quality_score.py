@@ -127,12 +127,12 @@ def main():
     # 输入frame路径
 
     input_dir = (
-        "../../../data/frames/001_interview"
+        "../../../data/faces/002_interview"
     )
 
 
     video_name = (
-        "001_interview"
+        "002_interview"
     )
 
 

@@ -6,15 +6,15 @@ from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
 
-input_dir = "../../../data/frames/001_interview"
+input_dir = "../../../data/frames/002_interview"
 
-output_dir = "../../../data/faces/001_interview"
+output_dir = "../../../data/faces/002_interview"
 
 os.makedirs(output_dir, exist_ok=True)
 
 
 # model path
-model_path = "../../models/blaze_face_short_range.tflite"
+model_path = "../../../models/blaze_face_short_range.tflite"
 
 
 base_options = python.BaseOptions(

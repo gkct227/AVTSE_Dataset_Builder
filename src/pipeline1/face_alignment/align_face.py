@@ -8,10 +8,10 @@ from mediapipe.tasks.python import vision
 
 
 
-INPUT_DIR="../../../data/frames/001_interview"
+INPUT_DIR="../../../data/faces/002_interview"
 
-OUTPUT_DIR="../../../results_pipeline1/aligned_faces"
-
+OUTPUT_DIR="../../../results_pipeline1/aligned_faces/002_interview"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 MODEL_PATH="models/face_landmarker.task"
 

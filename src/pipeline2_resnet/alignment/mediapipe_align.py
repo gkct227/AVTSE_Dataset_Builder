@@ -84,10 +84,10 @@ def align_face(img, landmarks):
 def main():
 
 
-    input_dir="../../../data/frames/001_interview"
+    input_dir="../../../data/faces/002_interview"
 
 
-    output_dir="../../../results_pipeline2/aligned_faces"
+    output_dir="../../../results_pipeline2/aligned_faces/002_interview"
 
 
     os.makedirs(

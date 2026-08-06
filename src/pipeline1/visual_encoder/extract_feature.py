@@ -5,15 +5,47 @@ import numpy as np
 from insightface.app import FaceAnalysis
 
 
-INPUT_DIR="../../../results_pipeline1/aligned_faces"
+# ==========================
+# Path
+# ==========================
 
-OUTPUT_FILE="../../../results_pipeline1/features/features.npy"
+INPUT_DIR = "../../../results_pipeline1/aligned_faces/002_interview"
 
+
+FEATURE_DIR = "../../../results_pipeline1/features"
+
+
+FEATURE_FILE = os.path.join(
+    FEATURE_DIR,
+    "features_002.npy"
+)
+
+
+NAME_FILE = os.path.join(
+    FEATURE_DIR,
+    "names_002.npy"
+)
+
+
+
+# ==========================
+# Main
+# ==========================
 
 
 def main():
 
-    # 初始化ArcFace
+
+    os.makedirs(
+        FEATURE_DIR,
+        exist_ok=True
+    )
+
+
+    # ======================
+    # Load ArcFace model
+    # ======================
+
     app = FaceAnalysis(
         name="buffalo_l",
         providers=[
@@ -21,53 +53,101 @@ def main():
         ]
     )
 
+
     app.prepare(
         ctx_id=0,
         det_size=(640,640)
     )
 
 
-    features=[]
+    recognizer = app.models["recognition"]
 
 
-    files=sorted(
+
+    features = []
+
+    names = []
+
+
+
+    files = sorted(
         os.listdir(INPUT_DIR)
     )
 
 
+    print(
+        "Total images:",
+        len(files)
+    )
+
+
+
     for f in files:
 
-        if not f.endswith(".jpg"):
+
+        if not f.lower().endswith(
+            ".jpg"
+        ):
             continue
 
 
-        path=os.path.join(
+
+        img_path = os.path.join(
             INPUT_DIR,
             f
         )
 
 
-        img=cv2.imread(path)
+        img = cv2.imread(
+            img_path
+        )
 
 
         if img is None:
+
+            print(
+                "Cannot read:",
+                f
+            )
+
             continue
 
 
-        faces=app.get(img)
+
+        # ==========================
+        # Important:
+        # aligned_faces 已经对齐
+        # 不再做人脸检测
+        # ==========================
 
 
-        if len(faces)==0:
+        embedding = recognizer.get_feat(
+            img
+        )
+
+
+        if embedding is None:
+
+            print(
+                "Failed:",
+                f
+            )
+
             continue
 
 
-        # ArcFace embedding
 
-        embedding=faces[0].embedding
+        embedding = embedding.flatten()
+
 
 
         features.append(
             embedding
+        )
+
+
+        names.append(
+            f
         )
 
 
@@ -77,14 +157,27 @@ def main():
         )
 
 
-    features=np.stack(features)
 
 
-    np.save(
-        OUTPUT_FILE,
+    # ==========================
+    # Convert
+    # ==========================
+
+
+    features = np.stack(
         features
+    ).astype(
+        np.float32
     )
 
+
+    names = np.array(
+        names
+    )
+
+
+
+    print("====================")
 
     print(
         "Feature shape:",
@@ -92,6 +185,44 @@ def main():
     )
 
 
+    print(
+        "Image number:",
+        len(names)
+    )
+
+
+
+    # ==========================
+    # Save
+    # ==========================
+
+
+    np.save(
+        FEATURE_FILE,
+        features
+    )
+
+
+    np.save(
+        NAME_FILE,
+        names
+    )
+
+
+
+    print(
+        "Saved feature:",
+        FEATURE_FILE
+    )
+
+
+    print(
+        "Saved names:",
+        NAME_FILE
+    )
+
+
 
 if __name__=="__main__":
+
     main()

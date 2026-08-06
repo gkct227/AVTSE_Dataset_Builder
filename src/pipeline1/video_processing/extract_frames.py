@@ -2,9 +2,9 @@ import cv2
 import os
 
 
-video_path = "../../../data/raw_videos/001_interview.mp4"
+video_path = "../../../data/raw_videos/002_interview.mp4"
 
-output_dir = "../../../data/frames/001_interview"
+output_dir = "../../../data/frames/002_interview"
 
 
 # 创建输出目录

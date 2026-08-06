@@ -15,13 +15,13 @@ from torchvision import transforms
 # =========================
 
 input_dir = (
-    "../../../results_pipeline2/aligned_faces"
+    "../../../results_pipeline2/aligned_faces/002_interview"
 )
 
 
 output_path = (
     "../../../results_pipeline2/features/"
-    "pipeline2_resnet_features.npy"
+    "pipeline2_resnet_features_2.npy"
 )
 
 

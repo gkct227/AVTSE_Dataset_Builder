@@ -31,7 +31,6 @@ resnet = np.load(
 )
 
 
-
 print(
     "ArcFace:",
     arcface.shape
@@ -124,7 +123,7 @@ plt.title(
 
 
 plt.savefig(
-    "../../results_comparison/pca_feature.png",
+    "../../results_comparison/pca_feature_1.png",
     dpi=300
 )
 
