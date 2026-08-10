@@ -7,13 +7,13 @@ import random
 def main():
 
     # metadata
-    csv_path = "../../../results_pipeline1/dataset_metadata.csv"
+    csv_path = "../../../results/dataset_metadata.csv"
 
     # frames
     frame_dir = "../../../data/frames/001_interview"
 
     # output
-    output_dir = "../../../results_pipeline1/visualization_result"
+    output_dir = "../../../results/visualization_result"
 
     os.makedirs(
         output_dir,
