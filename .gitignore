@@ -19,3 +19,15 @@ test_data/
 .vscode/
 
 echo "**/.venv/" >> ../../.gitignore
+
+# videos
+*.mp4
+*.avi
+*.mov
+
+# generated audio
+output_audio/
+*.wav
+
+# dataset
+data/*.mp4

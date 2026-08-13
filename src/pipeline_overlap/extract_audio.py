@@ -1,97 +1,60 @@
 import os
-import pandas as pd
-from pyannote.audio import Pipeline
+import subprocess
+from pathlib import Path
 
-# =============================
-# Config
-# =============================
+# 输入输出目录
+INPUT_DIR = Path("input_video")
+OUTPUT_DIR = Path("output_audio")
 
-HF_TOKEN = "YOUR_TOKEN"
+# 创建输出目录
+OUTPUT_DIR.mkdir(exist_ok=True)
 
-AUDIO_DIR = "output_audio"
 
-OUTPUT_DIR = "overlap_results"
+def extract_audio(video_path, audio_path):
+    """
+    从 mp4 提取 wav 音频
+    """
+    cmd = [
+        "ffmpeg",
+        "-i", str(video_path),
+        "-vn",                 # 不要视频
+        "-acodec", "pcm_s16le", # wav编码
+        "-ar", "16000",        # 采样率16k（AVSE/TSE常用）
+        "-ac", "1",            # 单声道
+        "-y",                  # 覆盖已有文件
+        str(audio_path)
+    ]
 
-TIMELINE_CSV = os.path.join(
-    OUTPUT_DIR,
-    "speaker_segments.csv"
-)
+    subprocess.run(
+        cmd,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.STDOUT,
+        check=True
+    )
 
-# =============================
-# Load pipeline
-# =============================
-
-pipeline = Pipeline.from_pretrained(
-    "pyannote/speaker-diarization-community-1",
-    token=HF_TOKEN
-)
-
-# =============================
-# Main
-# =============================
 
 def main():
 
-    os.makedirs(
-        OUTPUT_DIR,
-        exist_ok=True
-    )
+    videos = list(INPUT_DIR.glob("*.mp4"))
 
-    records = []
+    if len(videos) == 0:
+        print("input_video 文件夹没有找到 mp4 文件")
+        return
 
-    audio_files = sorted(os.listdir(AUDIO_DIR))
+    for video in videos:
 
-    print(f"Found {len(audio_files)} audio files.")
+        output_name = video.stem + ".wav"
+        output_file = OUTPUT_DIR / output_name
 
-    for audio in audio_files:
+        print(f"Processing: {video.name}")
 
-        if not audio.endswith(".wav"):
-            continue
+        try:
+            extract_audio(video, output_file)
+            print(f"Saved: {output_file}")
 
-        audio_path = os.path.join(
-            AUDIO_DIR,
-            audio
-        )
-
-        print(f"\nProcessing {audio}")
-
-        diarization = pipeline(audio_path)
-
-        for turn, speaker in diarization.speaker_diarization:
-
-            records.append({
-
-                "audio": audio,
-
-                "speaker": speaker,
-
-                "start": round(turn.start,3),
-
-                "end": round(turn.end,3),
-
-                "duration": round(
-                    turn.end-turn.start,
-                    3
-                )
-
-            })
-
-    df = pd.DataFrame(records)
-
-    df.to_csv(
-        TIMELINE_CSV,
-        index=False
-    )
-
-    print(df.head())
-
-    print()
-
-    print("Saved:")
-
-    print(TIMELINE_CSV)
+        except subprocess.CalledProcessError:
+            print(f"Failed: {video.name}")
 
 
-if __name__=="__main__":
-
+if __name__ == "__main__":
     main()
